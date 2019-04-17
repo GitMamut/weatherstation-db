@@ -15,9 +15,14 @@ server.get('/', (req, res) => {
     .then(snapshot => {
         const dateKey = Object.keys(snapshot.val())[0]
         const values = snapshot.val()[dateKey]
+        res.set({"Content-type": "text/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET",
+        "Access-Control-Max-Age": 2592000,
+        "X-Reading-Time": dateKey})
         res.send(values)
     })
     .catch(e => console.log(e));
 })
 
-server.listen(config.PORT, () => console.log(`Example app listening on port ${config.PORT}!`))
+server.listen(config.PORT, () => console.log(`Listening on port ${config.PORT}!`))
