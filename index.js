@@ -1,10 +1,19 @@
 const express = require('express')
+const firebase = require("firebase");
+const config = require("./config");
 
-const app = express();
-const PORT = process.env.PORT || 5000
+console.log("Initializing Firebase DB...");
+firebase.initializeApp(config.db);
+console.log("Firebase DB started");
 
-const NAME = process.env.NAME || "Unknown"
 
-app.get('/', (req, res) => res.send(`Hello ${NAME}!`))
+const server = express();
+server.get('/', (req, res) => {
+    console.log("DB > ref('/hello/')");
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
+    firebase.database().ref('/hello/').once('value')
+    .then(snapshot => res.send(snapshot.val()))
+    .catch(e => console.log(e));
+})
+
+server.listen(config.PORT, () => console.log(`Example app listening on port ${config.PORT}!`))
