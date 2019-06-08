@@ -20,7 +20,7 @@ server.get('/', (req, res) => {
         "Access-Control-Allow-Methods": "POST, GET",
         "Access-Control-Max-Age": 2592000,
         "X-Reading-Time": dateKey})
-        res.send(values)
+        res.send({date: dateKey, values: values})
     })
     .catch(e => console.log(e));
 })
