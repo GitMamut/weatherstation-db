@@ -39,7 +39,28 @@ server.get('/lametric/out/now', (req, res) => {
             frames: [
                 {
                     text: temp_outside + "°",
-                    icon: "i7066"
+                    icon: "i7066",
+                    index: 0
+                }
+            ]
+        })
+    })
+    .catch(e => console.log(e));
+})
+
+
+server.get('/lametric/out/history', (req, res) => {
+    console.log("DB >");
+
+    firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(10).once('value')
+    .then(snapshot => {
+        const values = Object.keys(snapshot.val())
+            .map(dateKey => snapshot.val()[dateKey]["outdoor_temperature"])
+            .map(floatValue => parseInt(floatValue * 10))
+        res.send({
+            frames: [
+                {
+                    chartData: values
                 }
             ]
         })
