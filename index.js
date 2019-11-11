@@ -8,6 +8,7 @@ console.log("DB started");
 
 
 const server = express();
+
 server.get('/', (req, res) => {
     console.log("DB >");
 
@@ -21,6 +22,25 @@ server.get('/', (req, res) => {
         "Access-Control-Max-Age": 2592000,
         "X-Reading-Time": dateKey})
         res.send({date: dateKey, values: values})
+    })
+    .catch(e => console.log(e));
+})
+
+
+server.get('/lametric/out/now', (req, res) => {
+    console.log("DB >");
+
+    firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(1).once('value')
+    .then(snapshot => {
+        const temp_outside = values.outdoor_temperature
+        res.send({
+            frames: [
+                {
+                    text: temp_outside + "°",
+                    icon: "i7066"
+                }
+            ]
+        })
     })
     .catch(e => console.log(e));
 })
