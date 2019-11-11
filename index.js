@@ -32,6 +32,8 @@ server.get('/lametric/out/now', (req, res) => {
 
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(1).once('value')
     .then(snapshot => {
+        const dateKey = Object.keys(snapshot.val())[0]
+        const values = snapshot.val()[dateKey]
         const temp_outside = values.outdoor_temperature
         res.send({
             frames: [
