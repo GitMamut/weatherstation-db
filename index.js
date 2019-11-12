@@ -52,15 +52,29 @@ server.get('/lametric/out/now', (req, res) => {
 server.get('/lametric/out/history', (req, res) => {
     console.log("DB >");
 
-    firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(10).once('value')
+    firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(36).once('value')
     .then(snapshot => {
         const values = Object.keys(snapshot.val())
             .map(dateKey => snapshot.val()[dateKey]["outdoor_temperature"])
-            .map(floatValue => parseInt(floatValue * 10))
+            .map(floatValue => parseInt(floatValue * 10));
+        const minValue = values.reduce((prev, curr) => {
+            return curr < prev ? curr : prev;
+        }, values[0]);
+        var processedValues =values;
+        if (minValue < 0 ) {
+            processedValues = values.map(value => value - minValue);
+        }
+        const temp_outside = values[values.length - 1] / 10;
         res.send({
             frames: [
                 {
-                    chartData: values
+                    text: temp_outside + "°",
+                    icon: "i7066",
+                    index: 0
+                },
+                {
+                    chartData: processedValues,
+                    index: 1
                 }
             ]
         })
