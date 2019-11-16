@@ -34,20 +34,22 @@ server.get('/lametric/pm/now', (req, res) => {
     .then(snapshot => {
         const dateKey = Object.keys(snapshot.val())[0]
         const values = snapshot.val()[dateKey]
-        const pm10 = values.espeasy_PM10
-        const pm10_iconIndex = Math.min(parseInt(pm10 / config.pm10_scale * 4.0), 4)
         const pm2_5 = values.espeasy_PM2_5
+        const mp2_5_percent = pm2_5 / config.pm2_5_scale * 100.0
         const pm2_5_iconIndex = Math.min(parseInt(pm2_5 / config.pm2_5_scale * 4.0), 4)
+        const pm10 = values.espeasy_PM10
+        const mp10_percent = pm10 / config.pm10_scale * 100.0
+        const pm10_iconIndex = Math.min(parseInt(pm10 / config.pm10_scale * 4.0), 4)
         res.send({
             frames: [
                 {
-                    text: pm10,
-                    icon: config.pm10_icons[pm10_iconIndex],
+                    text: mp2_5_percent.toFixed(1) + "%",
+                    icon: config.pm2_5_icons[pm2_5_iconIndex],
                     index: 0
                 },
                 {
-                    text: pm2_5,
-                    icon: config.pm2_5_icons[pm2_5_iconIndex],
+                    text: mp10_percent.toFixed(1) + "%",
+                    icon: config.pm10_icons[pm10_iconIndex],
                     index: 1
                 }
             ]
