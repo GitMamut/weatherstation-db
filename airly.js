@@ -12,7 +12,7 @@ const formatLM_Response = (indexValue) => {
     frames: [
       {
         text: "" + indexValue,
-        icon: "i7066",
+        icon: "i91",
         index: 0
       }
     ]
