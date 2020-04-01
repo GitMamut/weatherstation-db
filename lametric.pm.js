@@ -1,3 +1,5 @@
+const config = require("./config.js");
+
 const prepare_LM_frames_pm = (snapshot) => {
   const dateKey = Object.keys(snapshot.val())[0];
   const values = snapshot.val()[dateKey];
