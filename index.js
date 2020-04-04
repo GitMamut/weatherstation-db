@@ -1,6 +1,6 @@
 const express = require('express')
 const firebase = require("firebase");
-const config = require("./config.js");
+const config = require("./config_local.js");
 const sensors = require("./sensors.js");
 const lm_temperature = require("./lametric.temperature.js");
 const lm_pm = require("./lametric.pm.js");
@@ -47,10 +47,15 @@ server.get('/lametric/out/history', (req, res) => {
 server.get("/airly", (req, res) => {
     logIncomingRequest(req);
     fetch(airly.getUrl(), airly.request())
-        .then(res => res.json())
+        .then(airlyResponse => {
+            console.log({
+                "remaining-day": airlyResponse.headers.get("x-ratelimit-remaining-day"),
+                "remaining-minute": airlyResponse.headers.get("x-ratelimit-remaining-minute")
+            });
+            return airlyResponse.json();
+        })
         .then(json => {
-            
-            res.send(airly.framesNow(json.current.indexes[0].value));
+            res.send(airly.framesNow(json));
         })
         .catch(e => console.error(e));
 });
