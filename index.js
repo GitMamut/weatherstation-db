@@ -1,6 +1,6 @@
 const express = require('express')
 const firebase = require("firebase");
-const config = require("./config_local.js");
+const config = require("./config.js");
 const sensors = require("./sensors.js");
 const lm_temperature = require("./lametric.temperature.js");
 const lm_pm = require("./lametric.pm.js");
