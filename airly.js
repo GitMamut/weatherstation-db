@@ -66,8 +66,8 @@ const getHumidityFrame = (humidityValue) => ({
 });
 
 const getTemperatureFrame = (temperatureValue) => ({
-  text: temperatureValue.toString() + " °C",
-  icon: "i19017"
+  text: temperatureValue.toFixed(1) + " °",
+  icon: "i19654"
 });
 
 const getSmogAdviceFrame = (smogIndex) => ({
