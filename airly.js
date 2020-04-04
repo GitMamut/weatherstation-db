@@ -12,16 +12,15 @@ const formatLM_Response = (response) => {
   const temperatureValue = findValues(response.current.values, "TEMPERATURE");
   const humidityValue = findValues(response.current.values, "HUMIDITY");
   const pressureValue = findValues(response.current.values, "PRESSURE");
-  const smogHistory = response.history
-    .map(history => getSmogIndex(history))
-    .filter(index => index !== undefined)
-    .map(definedIndex => definedIndex.value.toFixed(0));
+  const smogHistory = getSmogHistory(response.history);
+  const temperatureHistory = getTemperatureHistory(response.history);
 
   const frames = [
     smogIndex ? getSmogIndexFrame(smogIndex) : undefined,
-    smogHistory ? getSmogHistoryFrame(smogHistory) : undefined,
+    smogHistory ? getHistoryFrame(smogHistory) : undefined,
     smogIndex ? getSmogAdviceFrame(smogIndex) : undefined,
     temperatureValue ? getTemperatureFrame(temperatureValue) : undefined,
+    temperatureHistory ? getHistoryFrame(temperatureHistory) : undefined,
     humidityValue ? getHumidityFrame(humidityValue) : undefined,
     pressureValue ? getPressureFrame(pressureValue) : undefined
   ]
@@ -61,7 +60,12 @@ const getPressureFrame = (pressureValue) => ({
 });
 
 const getHumidityFrame = (humidityValue) => ({
-  text: humidityValue.toString() + " %",
+  goalData: {
+    start: 0,
+    current: humidityValue.toFixed(0),
+    end: 100,
+    unit: "%"
+  },
   icon: "i8990"
 });
 
@@ -74,7 +78,7 @@ const getSmogAdviceFrame = (smogIndex) => ({
   text: smogIndex.advice
 });
 
-const getSmogHistoryFrame = (smogHistory) => ({
+const getHistoryFrame = (smogHistory) => ({
   chartData: smogHistory
 });
 
@@ -93,6 +97,26 @@ const getCloudIcon = (smogIndexValue) => {
   } else {
     return "i36267";
   }
+};
+
+const getSmogHistory = (history) =>
+  history
+    .map(measurement => getSmogIndex(measurement))
+    .filter(index => index !== undefined)
+    .map(definedIndex => definedIndex.value.toFixed(0));
+
+const getTemperatureHistory = (history) => {
+  const temperatureHistory = history
+    .map(measurement => findValues(measurement.values, "TEMPERATURE"))
+    .filter(value => value !== undefined);
+  const minTemperature = temperatureHistory.reduce(
+    (accumulator, current) =>
+      accumulator === undefined || current < accumulator ? current : accumulator
+  );
+  const normalization = minTemperature < 0 ? minTemperature : 0;
+  return temperatureHistory.map(temperature =>
+    ((temperature - normalization) * 10).toFixed(0)
+  );
 };
 
 exports.getUrl = getUrl;
