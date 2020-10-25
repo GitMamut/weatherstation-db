@@ -6,7 +6,7 @@ const lm_temperature = require("./lametric.temperature.js");
 const lm_pm = require("./lametric.pm.js");
 const airly = require("./airly.js");
 
-console.log("Initializing DB...");
+console.error("Initializing DB...");
 firebase.initializeApp(config.db);
 console.log("DB started");
 
