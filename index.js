@@ -6,9 +6,11 @@ const lm_temperature = require("./lametric.temperature.js");
 const lm_pm = require("./lametric.pm.js");
 const airly = require("./airly.js");
 
-console.error("Initializing DB...");
+const log = require('simple-node-logger').createSimpleLogger('project.log');
+
+log.info("Initializing DB...");
 firebase.initializeApp(config.db);
-console.log("DB started");
+log.info("DB started");
 
 const server = express();
 
@@ -20,35 +22,35 @@ server.get(config.PREFIX + '/', (req, res) => {
             res.set(sensors.prepareHeaders(dateKey));
             res.send({ date: dateKey, values: values })
         })
-        .catch(e => console.log(e));
+        .catch(e => log.info(e));
 })
 
 server.get(config.PREFIX + '/lametric/pm/now', (req, res) => {
     logIncomingRequest(req);
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(1).once('value')
         .then(snapshot => { res.send(lm_pm.framesNow(snapshot)) })
-        .catch(e => console.log(e));
+        .catch(e => log.info(e));
 })
 
 server.get(config.PREFIX + '/lametric/out/now', (req, res) => {
     logIncomingRequest(req);
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(1).once('value')
         .then(snapshot => { res.send(lm_temperature.framesNow(snapshot)) })
-        .catch(e => console.log(e));
+        .catch(e => log.info(e));
 })
 
 server.get(config.PREFIX + '/lametric/out/history', (req, res) => {
     logIncomingRequest(req);
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(36).once('value')
         .then(snapshot => { res.send(lm_temperature.framesHistory(snapshot)) })
-        .catch(e => console.log(e));
+        .catch(e => log.info(e));
 })
 
 server.get(config.PREFIX + "/airly", (req, res) => {
     logIncomingRequest(req);
     fetch(airly.getUrl(), airly.request())
         .then(airlyResponse => {
-            console.log({
+            log.info({
                 "remaining-day": airlyResponse.headers.get("x-ratelimit-remaining-day"),
                 "remaining-minute": airlyResponse.headers.get("x-ratelimit-remaining-minute")
             });
@@ -60,9 +62,13 @@ server.get(config.PREFIX + "/airly", (req, res) => {
         .catch(e => console.error(e));
 });
 
-server.listen(config.PORT, () => console.log(`Listening on port ${config.PORT}!`))
+server.listen(config.PORT, () => log.info(`Listening on port ${config.PORT}!`))
 
 function logIncomingRequest(req) {
-    console.log(req.url + ": " + (req.header('x-forwarded-for') || req.connection.remoteAddress));
+    log.info(req.url + ": " + (req.header('x-forwarded-for') || req.connection.remoteAddress));
+}
+
+function logToFile(message) {
+
 }
 
