@@ -22,28 +22,28 @@ server.get(config.PREFIX + '/', (req, res) => {
             res.set(sensors.prepareHeaders(dateKey));
             res.send({ date: dateKey, values: values })
         })
-        .catch(e => log.info(e));
+        .catch(e => log.error(e));
 })
 
 server.get(config.PREFIX + '/lametric/pm/now', (req, res) => {
     logIncomingRequest(req);
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(1).once('value')
         .then(snapshot => { res.send(lm_pm.framesNow(snapshot)) })
-        .catch(e => log.info(e));
+        .catch(e => log.error(e));
 })
 
 server.get(config.PREFIX + '/lametric/out/now', (req, res) => {
     logIncomingRequest(req);
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(1).once('value')
         .then(snapshot => { res.send(lm_temperature.framesNow(snapshot)) })
-        .catch(e => log.info(e));
+        .catch(e => log.error(e));
 })
 
 server.get(config.PREFIX + '/lametric/out/history', (req, res) => {
     logIncomingRequest(req);
     firebase.database().ref('/sensor-readings/').orderByKey().limitToLast(36).once('value')
         .then(snapshot => { res.send(lm_temperature.framesHistory(snapshot)) })
-        .catch(e => log.info(e));
+        .catch(e => log.error(e));
 })
 
 server.get(config.PREFIX + "/airly", (req, res) => {
@@ -59,7 +59,7 @@ server.get(config.PREFIX + "/airly", (req, res) => {
         .then(json => {
             res.send(airly.framesNow(json));
         })
-        .catch(e => console.error(e));
+        .catch(e => log.error(e));
 });
 
 server.listen(config.PORT, () => log.info(`Listening on port ${config.PORT}!`))
