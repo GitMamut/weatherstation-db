@@ -48,7 +48,11 @@ server.get(config.PREFIX + '/lametric/out/history', (req, res) => {
 
 server.get(config.PREFIX + "/airly", (req, res) => {
     logIncomingRequest(req);
-    fetch(airly.getUrl(), airly.request())
+    const airlyUrl = airly.getUrl();
+    log.info(airlyUrl);
+    const airlyRequest = airly.request();
+    log.info(airlyRequest);
+    fetch(airlyUrl, airlyRequest)
         .then(airlyResponse => {
             log.info({
                 "remaining-day": airlyResponse.headers.get("x-ratelimit-remaining-day"),
