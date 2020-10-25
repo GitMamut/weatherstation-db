@@ -63,12 +63,8 @@ server.get(config.PREFIX + "/airly", (req, res) => {
 });
 
 server.listen(config.PORT, () => log.info(`Listening on port ${config.PORT}!`))
+log.info('Using prefix: ' + config.PREFIX);
 
 function logIncomingRequest(req) {
     log.info(req.url + ": " + (req.header('x-forwarded-for') || req.connection.remoteAddress));
 }
-
-function logToFile(message) {
-
-}
-
