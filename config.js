@@ -8,6 +8,8 @@ exports.db = {
 
 exports.PORT = process.env.PORT || 5000
 
+exports.PREFIX = process.env.PREFIX || ""
+
 exports.pm10_icons = ["i18018", "i18019", "i18020", "i18021", "i18022"];
 exports.pm10_scale = 50.0;
 
