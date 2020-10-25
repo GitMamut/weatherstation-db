@@ -15,3 +15,7 @@ exports.pm10_scale = 50.0;
 
 exports.pm2_5_icons = ["i18023", "i18024", "i18025", "i18026", "i18027"];
 exports.pm2_5_scale = 25.0;
+
+exports.LAT = process.env.LAT || 0.0;
+exports.LNG = process.env.LNG || 0.0;
+exports.AIRLY_API_KEY = process.env.AIRLY_API_KEY || "";

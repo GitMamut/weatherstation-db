@@ -1,9 +1,11 @@
+const config = require("./config.js");
+
 const getUrl = () => {
   return (
     "https://airapi.airly.eu/v2/measurements/point?lat=" +
-    process.env.LAT +
+    config.LAT +
     "&lng=" +
-    process.env.LNG
+    config.LNG
   );
 };
 
@@ -44,7 +46,7 @@ const prepareRequest = () => ({
   method: "GET",
   headers: {
     Accept: "application/json",
-    apikey: process.env.AIRLY_API_KEY
+    apikey: config.AIRLY_API_KEY
   }
 });
 

@@ -5,6 +5,7 @@ const sensors = require("./sensors.js");
 const lm_temperature = require("./lametric.temperature.js");
 const lm_pm = require("./lametric.pm.js");
 const airly = require("./airly.js");
+const fetch = require("node-fetch");
 
 const log = require('simple-node-logger').createSimpleLogger('project.log');
 
