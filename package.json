@@ -13,7 +13,7 @@
   "author": "Mint-frost",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "firebase": "^7.3.0",
     "node-fetch": "^2.6.1",
     "simple-node-logger": "^18.12.24"
